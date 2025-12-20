@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Command Encyclopedia 100</title>
+    <style>
+        :root {
+            --linux-green: #2ecc71;
+            --dark-gray: #2c3e50;
+            --bg-light: #f4f7f6;
+            --code-bg: #1e1e1e;
+            --sidebar-width: 280px;
+        }
+
+        body {
+            font-family: 'Consolas', 'Monaco', 'Meiryo', sans-serif;
+            margin: 0;
+            display: flex;
+            background-color: var(--bg-light);
+            color: #333;
+        }
+
+        /* サイドバー */
+        aside {
+            width: var(--sidebar-width);
+            background: var(--dark-gray);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+        }
+
+        aside h2 {
+            padding: 20px;
+            font-size: 1.2rem;
+            color: var(--linux-green);
+            border-bottom: 1px solid #3e4f5f;
+            margin: 0;
+        }
+
+        aside ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        aside ul li a {
+            display: block;
+            padding: 12px 20px;
+            color: #bdc3c7;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: 0.2s;
+            border-left: 4px solid transparent;
+        }
+
+        aside ul li a:hover {
+            background: #34495e;
+            color: white;
+            border-left: 4px solid var(--linux-green);
+        }
+
+        /* メインコンテンツ */
+        main {
+            margin-left: var(--sidebar-width);
+            padding: 40px;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        header {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--linux-green);
+        }
+
+        h1 { margin: 0; font-size: 2.5rem; }
+        .desc { color: #666; margin-top: 10px; }
+
+        h2.cat-title {
+            margin-top: 60px;
+            padding: 10px 15px;
+            background: white;
+            border-left: 6px solid var(--linux-green);
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        th {
+            background: #ecf0f1;
+            text-align: left;
+            padding: 15px;
+            font-size: 0.9rem;
+            color: var(--dark-gray);
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+            vertical-align: top;
+        }
+
+        code {
+            background: var(--code-bg);
+            color: #f8f8f2;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+
+        .opt { color: #e67e22; font-weight: bold; }
+
+        @media (max-width: 900px) {
+            aside { width: 100%; height: auto; position: static; }
+            main { margin-left: 0; padding: 20px; }
+            body { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<aside>
+    <h2>Linux 100 Commands</h2>
+    <ul>
+        <li><a href="#file-ops">1. ファイル・ディレクトリ操作 (15)</a></li>
+        <li><a href="#text-proc">2. テキスト処理・閲覧 (15)</a></li>
+        <li><a href="#sys-info">3. システム情報・管理 (10)</a></li>
+        <li><a href="#process">4. プロセス管理 (10)</a></li>
+        <li><a href="#network">5. ネットワーク関連 (12)</a></li>
+        <li><a href="#permission">6. 権限・ユーザー管理 (10)</a></li>
+        <li><a href="#archive">7. 圧縮・解凍 (8)</a></li>
+        <li><a href="#search">8. 検索・場所特定 (8)</a></li>
+        <li><a href="#disk">9. ディスク・ストレージ (6)</a></li>
+        <li><a href="#misc">10. その他・便利コマンド (6)</a></li>
+    </ul>
+</aside>
+
+<main>
+    <header>
+        <h1>Linuxコマンド実用100選</h1>
+        <p class="desc">サーバー管理や開発業務で必須となる、主要Linuxコマンドとその用法を完全網羅。</p>
+    </header>
+
+    <!-- 1. ファイル操作 -->
+    <section id="file-ops">
+        <h2 class="cat-title">1. ファイル・ディレクトリ操作</h2>
+        <table>
+            <tr><th width="30%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>ls</code></td><td>ファイル・ディレクトリの一覧を表示</td></tr>
+            <tr><td><code>ls -la</code></td><td>隠しファイルを含む詳細情報を表示</td></tr>
+            <tr><td><code>cd [dir]</code></td><td>ディレクトリを移動</td></tr>
+            <tr><td><code>pwd</code></td><td>現在のカレントディレクトリを表示</td></tr>
+            <tr><td><code>mkdir [dir]</code></td><td>新しいディレクトリを作成</td></tr>
+            <tr><td><code>mkdir -p [path]</code></td><td>中間ディレクトリも含めて再帰的に作成</td></tr>
+            <tr><td><code>rm [file]</code></td><td>ファイルを削除</td></tr>
+            <tr><td><code>rm -rf [dir]</code></td><td>ディレクトリを中身ごと強制削除（注意！）</td></tr>
+            <tr><td><code>cp [src] [dst]</code></td><td>ファイルをコピー</td></tr>
+            <tr><td><code>cp -r [src] [dst]</code></td><td>ディレクトリを再帰的にコピー</td></tr>
+            <tr><td><code>mv [old] [new]</code></td><td>ファイルの移動、または名前変更</td></tr>
+            <tr><td><code>touch [file]</code></td><td>空ファイル作成、またはタイムスタンプ更新</td></tr>
+            <tr><td><code>ln -s [src] [link]</code></td><td>シンボリックリンク（ショートカット）を作成</td></tr>
+            <tr><td><code>tree</code></td><td>ディレクトリ構造をツリー形式で表示</td></tr>
+            <tr><td><code>file [file]</code></td><td>ファイルの種類（バイナリ、テキスト等）を確認</td></tr>
+        </table>
+    </section>
+
+    <!-- 2. テキスト処理 -->
+    <section id="text-proc">
+        <h2 class="cat-title">2. テキスト処理・閲覧</h2>
+        <table>
+            <tr><th width="30%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>cat [file]</code></td><td>ファイルの内容を全て表示</td></tr>
+            <tr><td><code>less [file]</code></td><td>大きなファイルをスクロールして閲覧</td></tr>
+            <tr><td><code>head -n [num]</code></td><td>ファイルの先頭数行を表示</td></tr>
+            <tr><td><code>tail -n [num]</code></td><td>ファイルの末尾数行を表示</td></tr>
+            <tr><td><code>tail -f [file]</code></td><td>ログファイルなどの更新をリアルタイム監視</td></tr>
+            <tr><td><code>grep "[word]"</code></td><td>特定の文字列を検索</td></tr>
+            <tr><td><code>grep -r "[word]" [dir]</code></td><td>ディレクトリ内を再帰的に文字列検索</td></tr>
+            <tr><td><code>sed 's/old/new/g'</code></td><td>文字列の置換処理</td></tr>
+            <tr><td><code>awk '{print $1}'</code></td><td>テキストの列（カラム）を抽出して処理</td></tr>
+            <tr><td><code>cut -d',' -f1</code></td><td>区切り文字を指定して特定のフィールドを抽出</td></tr>
+            <tr><td><code>sort</code></td><td>行をアルファベット・数値順に並び替え</td></tr>
+            <tr><td><code>uniq</code></td><td>重複する行を削除（隣接行のみ）</td></tr>
+            <tr><td><code>wc -l [file]</code></td><td>ファイルの行数をカウント</td></tr>
+            <tr><td><code>diff [file1] [file2]</code></td><td>2つのファイルの差分を表示</td></tr>
+            <tr><td><code>echo "text"</code></td><td>標準出力に文字列を表示</td></tr>
+        </table>
+    </section>
+
+    <!-- 3. システム情報 -->
+    <section id="sys-info">
+        <h2 class="cat-title">3. システム情報・管理</h2>
+        <table>
+            <tr><th width="30%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>uname -a</code></td><td>OSカーネルやシステム情報を表示</td></tr>
+            <tr><td><code>hostnamectl</code></td><td>ホスト名の確認・設定</td></tr>
+            <tr><td><code>uptime</code></td><td>システムの稼働時間と負荷（Load Average）を表示</td></tr>
+            <tr><td><code>free -m</code></td><td>メモリの空き容量をMB単位で表示</td></tr>
+            <tr><td><code>date</code></td><td>現在のシステム日時を表示・設定</td></tr>
+            <tr><td><code>cal</code></td><td>カレンダーを表示</td></tr>
+            <tr><td><code>dmesg</code></td><td>カーネルの出力メッセージ（ログ）を表示</td></tr>
+            <tr><td><code>lscpu</code></td><td>CPUのアーキテクチャ詳細を表示</td></tr>
+            <tr><td><code>lsusb</code> / <code>lspci</code></td><td>接続されているUSB/PCIデバイスを表示</td></tr>
+            <tr><td><code>vmstat</code></td><td>リソースの使用状況を一覧表示</td></tr>
+        </table>
+    </section>
+
+    <!-- 4. プロセス -->
+    <section id="process">
+        <h2 class="cat-title">4. プロセス管理</h2>
+        <table>
+            <tr><th width="30%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>ps aux</code></td><td>実行中の全プロセスを詳細表示</td></tr>
+            <tr><td><code>top</code></td><td>プロセスのリアルタイム監視（CPU/メモリ順）</td></tr>
+            <tr><td><code>htop</code></td><td>より視認性の高いプロセス監視（要インストール）</td></tr>
+            <tr><td><code>kill [PID]</code></td><td>特定のプロセスを終了</td></tr>
+            <tr><td><code>kill -9 [PID]</code></td><td>プロセスを強制終了</td></tr>
+            <tr><td><code>pkill [name]</code></td><td>プロセス名で指定して一括終了</td></tr>
+            <tr><td><code>jobs</code></td><td>バックグラウンドで実行中のジョブを表示</td></tr>
+            <tr><td><code>bg</code> / <code>fg</code></td><td>ジョブをバックグラウンド/フォアグラウンドに切替</td></tr>
+            <tr><td><code>nohup [cmd] &</code></td><td>ログアウト後もコマンドを実行継続</td></tr>
+            <tr><td><code>systemctl status [svc]</code></td><td>サービスの稼働状態を確認</td></tr>
+        </table>
+    </section>
+
+    <!-- 5. ネットワーク -->
+    <section id="network">
+        <h2 class="cat-title">5. ネットワーク関連</h2>
+        <table>
+            <tr><th width="30%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>ip addr</code></td><td>IPアドレスなどのネットワーク設定を表示</td></tr>
+            <tr><td><code>ping [host]</code></td><td>接続先端との疎通確認</td></tr>
+            <tr><td><code>curl [URL]</code></td><td>URLを叩いてレスポンスを取得（HTTP/HTTPS）</td></tr>
+            <tr><td><code>wget [URL]</code></td><td>ファイルをダウンロード</td></tr>
+            <tr><td><code>ssh [user]@[host]</code></td><td>リモートサーバーに安全にログイン</td></tr>
+            <tr><td><code>scp [file] [dst]</code></td><td>SSH経由でファイルを転送</td></tr>
+            <tr><td><code>rsync -av [src] [dst]</code></td><td>効率的なファイル同期・バックアップ</td></tr>
+            <tr><td><code>ss -tlpn</code></td><td>リッスンしているポート番号を表示</td></tr>
+            <tr><td><code>netstat -an</code></td><td>ネットワーク接続状態の一覧表示</td></tr>
+            <tr><td><code>dig [domain]</code></td><td>DNS情報を照会</td></tr>
+            <tr><td><code>nslookup [domain]</code></td><td>ドメイン名からIPを引く（またはその逆）</td></tr>
+            <tr><td><code>traceroute [host]</code></td><td>通信経路を確認</td></tr>
+        </table>
+    </section>
+
+    <!-- 6. 権限 -->
+    <section id="permission">
+        <h2 class="cat-title">6. 権限・ユーザー管理</h2>
+        <table>
+            <tr><th width="30%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>sudo [cmd]</code></td><td>管理者権限（root）でコマンドを実行</td></tr>
+            <tr><td><code>chmod [mode] [file]</code></td><td>ファイルやディレクトリの権限を変更</td></tr>
+            <tr><td><code>chown [user]:[group]</code></td><td>所有者とグループを変更</td></tr>
+            <tr><td><code>su - [user]</code></td><td>ユーザーを切り替える（- で環境変数を引継ぐ）</td></tr>
+            <tr><td><code>whoami</code></td><td>現在のログインユーザー名を表示</td></tr>
+            <tr><td><code>id</code></td><td>ユーザーIDや所属グループを表示</td></tr>
+            <tr><td><code>passwd</code></td><td>パスワードを変更</td></tr>
+            <tr><td><code>useradd [name]</code></td><td>新規ユーザーを作成</td></tr>
+            <li><code>userdel -r [name]</code></td><td>ユーザーを削除（ホームディレクトリ込み）</td></tr>
+            <tr><td><code>groups</code></td><td>所属しているグループを表示</td></tr>
+        </table>
+    </section>
+
+    <!-- 7. 圧縮・解凍 -->
+    <section id="archive">
+        <h2 class="cat-title">7. 圧縮・解凍・アーカイブ</h2>
+        <table>
+            <tr><th width="30%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>tar -cvf [file.tar] [dir]</code></td><td>アーカイブ（固める）を作成</td></tr>
+            <tr><td><code>tar -xvf [file.tar]</code></td><td>アーカイブを展開</td></tr>
+            <tr><td><code>tar -zcvf [file.tar.gz]</code></td><td>gzip形式で圧縮してアーカイブ</td></tr>
+            <tr><td><code>tar -zxvf [file.tar.gz]</code></td><td>gzip形式のアーカイブを解凍・展開</td></tr>
+            <tr><td><code>gzip [file]</code></td><td>ファイルをgzip形式で圧縮</td></tr>
+            <tr><td><code>gunzip [file.gz]</code></td><td>gzipファイルを解凍</td></tr>
+            <tr><td><code>zip -r [file.zip] [dir]</code></td><td>ZIP形式で圧縮</td></tr>
+            <tr><td><code>unzip [file.zip]</code></td><td>ZIPファイルを解凍</td></tr>
+        </table>
+    </section>
+
+    <!-- 8. 検索 -->
+    <section id="search">
+        <h2 class="cat-title">8. 検索・場所特定</h2>
+        <table>
+            <tr><th width="30%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>find [dir] -name "[pattern]"</code></td><td>ファイル名でファイルを検索</td></tr>
+            <tr><td><code>find [dir] -type f -mtime -7</code></td><td>最近7日間に更新されたファイルを検索</td></tr>
+            <tr><td><code>locate [file]</code></td><td>DBから高速にファイルを検索（updatedbが必要）</td></tr>
+            <tr><td><code>which [cmd]</code></td><td>実行コマンドのパス（場所）を表示</td></tr>
+            <tr><td><code>whereis [cmd]</code></td><td>バイナリ、ソース、マニュアルの場所を表示</td></tr>
+            <tr><td><code>type [cmd]</code></td><td>コマンドの種類（別名、関数、外部）を表示</td></tr>
+            <tr><td><code>grep -l "[word]" *</code></td><td>指定文字列を含むファイル名のみ表示</td></tr>
+            <tr><td><code>history</code></td><td>過去に実行したコマンドの履歴を表示</td></tr>
+        </table>
+    </section>
+
+    <!-- 9. ディスク -->
+    <section id="disk">
+        <h2 class="cat-title">9. ディスク・ストレージ</h2>
+        <table>
+            <tr><th width="30%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>df -h</code></td><td>ディスクの使用量（人間が読みやすい形式）を表示</td></tr>
+            <tr><td><code>du -sh [dir]</code></td><td>特定のディレクトリの使用量を集計</td></tr>
+            <tr><td><code>lsblk</code></td><td>ブロックデバイス（HDD/SSD/パーティション）を表示</td></tr>
+            <tr><td><code>mount</code></td><td>デバイスのマウント状態を表示・実行</td></tr>
+            <tr><td><code>umount [path]</code></td><td>マウントを解除</td></tr>
+            <tr><td><code>fdisk -l</code></td><td>パーティションテーブルを表示</td></tr>
+        </table>
+    </section>
+
+    <!-- 10. その他 -->
+    <section id="misc">
+        <h2 class="cat-title">10. その他・便利コマンド</h2>
+        <table>
+            <tr><th width="30%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>alias [name]='[cmd]'</code></td><td>コマンドの別名（エイリアス）を設定</td></tr>
+            <tr><td><code>export [VAR]=[val]</code></td><td>環境変数を設定</td></tr>
+            <tr><td><code>source [file]</code></td><td>設定ファイル（.bashrcなど）を即座に反映</td></tr>
+            <tr><td><code>watch -n [sec] [cmd]</code></td><td>コマンドを一定間隔で繰り返し実行</td></tr>
+            <tr><td><code>crontab -e</code></td><td>定期実行タスク（スケジュール）を編集</td></tr>
+            <tr><td><code>shutdown -h now</code></td><td>即座にシステムを終了</td></tr>
+            <tr><td><code>reboot</code></td><td>システムを再起動</td></tr>
+            <tr><td><code>clear</code></td><td>ターミナルの表示をクリア</td></tr>
+            <tr><td><code>man [cmd]</code></td><td>コマンドのマニュアルを表示</td></tr>
+            <tr><td><code>exit</code></td><td>セッションを終了</td></tr>
+        </table>
+    </section>
+
+    <footer style="margin-top: 100px; padding: 40px 0; text-align: center; color: #888; border-top: 1px solid #ddd;">
+        Linux Command Encyclopedia 100 - Keep Coding, Keep Learning.
+    </footer>
+</main>
+
+<script>
+    // スムーズスクロール
+    document.querySelectorAll('aside a').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            document.querySelector(targetId).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

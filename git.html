@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Command Encyclopedia 100</title>
+    <style>
+        :root {
+            --git-orange: #f05032;
+            --dark-blue: #2c3e50;
+            --light-bg: #f9fbfd;
+            --border-color: #e1e4e8;
+            --code-bg: #282c34;
+        }
+
+        body {
+            font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            background-color: var(--light-bg);
+            color: #333;
+        }
+
+        /* サイドバー */
+        aside {
+            width: 260px;
+            background: var(--dark-blue);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            padding-top: 20px;
+        }
+
+        aside h2 {
+            font-size: 1.1rem;
+            padding: 0 20px;
+            color: var(--git-orange);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        aside ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        aside ul li a {
+            display: block;
+            padding: 12px 20px;
+            color: #bdc3c7;
+            text-decoration: none;
+            font-size: 0.85rem;
+            border-left: 4px solid transparent;
+            transition: 0.2s;
+        }
+
+        aside ul li a:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border-left: 4px solid var(--git-orange);
+        }
+
+        /* メインコンテンツ */
+        main {
+            margin-left: 260px;
+            padding: 40px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        header {
+            margin-bottom: 40px;
+            border-bottom: 3px solid var(--git-orange);
+            padding-bottom: 20px;
+        }
+
+        h1 { font-size: 2.2rem; margin: 0; }
+        .subtitle { color: #666; margin-top: 10px; }
+
+        h2.section-title {
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 6px solid var(--git-orange);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            margin-top: 50px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin-top: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #f1f3f5;
+            padding: 15px;
+            text-align: left;
+            font-size: 0.9rem;
+            color: var(--dark-blue);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        code {
+            background: var(--code-bg);
+            color: #61afef;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: "Consolas", "Monaco", monospace;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .highlight {
+            color: #e06c75; /* Reddish */
+            font-weight: bold;
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            background: #eee;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
+
+        @media (max-width: 768px) {
+            aside { width: 100%; height: auto; position: static; }
+            main { margin-left: 0; padding: 20px; }
+            body { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<aside>
+    <h2>Git 100 Index</h2>
+    <ul>
+        <li><a href="#config">1. 設定・ユーザー (10)</a></li>
+        <li><a href="#init">2. 開始・取得 (5)</a></li>
+        <li><a href="#basic">3. 基本操作 (12)</a></li>
+        <li><a href="#diff">4. 差分確認 (10)</a></li>
+        <li><a href="#log">5. 履歴表示 (12)</a></li>
+        <li><a href="#branch">6. ブランチ (12)</a></li>
+        <li><a href="#remote">7. リモート同期 (10)</a></li>
+        <li><a href="#undo">8. 取消・復元 (12)</a></li>
+        <li><a href="#stash">9. 一時退避・掃除 (8)</a></li>
+        <li><a href="#expert">10. 高度な操作 (9)</a></li>
+    </ul>
+</aside>
+
+<main>
+    <header>
+        <h1>Gitコマンド実用百科事典 100選</h1>
+        <p class="subtitle">初心者からプロフェッショナルまで使える、100の主要コマンドとオプションの完全ガイド</p>
+    </header>
+
+    <!-- 1. 設定 -->
+    <section id="config">
+        <h2 class="section-title">1. 設定・ユーザー変更 (Config)</h2>
+        <table>
+            <tr><th>コマンド</th><th>解説</th></tr>
+            <tr><td><code>git config --global user.name "Name"</code></td><td>PC全体のユーザー名を登録</td></tr>
+            <tr><td><code>git config --global user.email "Email"</code></td><td>PC全体のメールアドレスを登録</td></tr>
+            <tr><td><code>git config --local user.name "Name"</code></td><td><span class="highlight">【リポジトリ単位】</span>現在のプロジェクトのみ名前変更</td></tr>
+            <tr><td><code>git config --local user.email "Email"</code></td><td><span class="highlight">【リポジトリ単位】</span>現在のプロジェクトのみメール変更</td></tr>
+            <tr><td><code>git config --list</code></td><td>適用されている全設定を表示</td></tr>
+            <tr><td><code>git config --show-origin user.name</code></td><td>設定がどこ（ファイル）で定義されているか確認</td></tr>
+            <tr><td><code>git config --global core.editor "code --wait"</code></td><td>エディタをVS Codeに変更</td></tr>
+            <tr><td><code>git config --global alias.st status</code></td><td><code>git st</code>でstatusを呼べるようにエイリアス作成</td></tr>
+            <tr><td><code>git config --global core.quotepath false</code></td><td>日本語ファイル名の文字化けを防止</td></tr>
+            <tr><td><code>git config --global init.defaultBranch main</code></td><td>デフォルトブランチ名をmainに固定</td></tr>
+        </table>
+    </section>
+
+    <!-- 2. 開始 -->
+    <section id="init">
+        <h2 class="section-title">2. リポジトリの開始・取得</h2>
+        <table>
+            <tr><th>コマンド</th><th>解説</th></tr>
+            <tr><td><code>git init</code></td><td>現在のディレクトリをGit管理下にする</td></tr>
+            <tr><td><code>git clone [url]</code></td><td>リモートリポジトリを丸ごとダウンロード</td></tr>
+            <tr><td><code>git clone --depth 1 [url]</code></td><td>履歴を捨てて最新の1コミット分だけ軽量クローン</td></tr>
+            <tr><td><code>git clone --branch [name] [url]</code></td><td>特定のブランチを指定してクローン</td></tr>
+            <tr><td><code>git sparse-checkout</code></td><td>巨大リポジトリの一部ディレクトリだけを抽出して取得</td></tr>
+        </table>
+    </section>
+
+    <!-- 3. 基本 -->
+    <section id="basic">
+        <h2 class="section-title">3. 基本操作 (Add/Commit)</h2>
+        <table>
+            <tr><th>コマンド</th><th>解説</th></tr>
+            <tr><td><code>git add [file]</code></td><td>特定のファイルをステージング</td></tr>
+            <tr><td><code>git add .</code></td><td>変更があった全てのファイルをステージング</td></tr>
+            <tr><td><code>git add -u</code></td><td>追跡済みのファイルの変更・削除のみをステージング</td></tr>
+            <tr><td><code>git add -p</code></td><td>変更箇所（ハンク）を対話形式で確認しながらadd</td></tr>
+            <tr><td><code>git commit -m "msg"</code></td><td>メッセージを付けてコミット</td></tr>
+            <tr><td><code>git commit -am "msg"</code></td><td>addとcommitを同時に行う(新規ファイルは対象外)</td></tr>
+            <tr><td><code>git commit --amend</code></td><td>直前のコミットメッセージや内容を修正</td></tr>
+            <tr><td><code>git commit --amend --no-edit</code></td><td>メッセージ変更なしで直前のコミットに含める</td></tr>
+            <tr><td><code>git commit --allow-empty -m "msg"</code></td><td>変更がなくても空のコミットを作成</td></tr>
+            <tr><td><code>git mv [old] [new]</code></td><td>ファイル名を変更してGitに通知</td></tr>
+            <tr><td><code>git rm [file]</code></td><td>ファイルを削除してステージング</td></tr>
+            <tr><td><code>git rm --cached [file]</code></td><td>ファイルは残すがGitの管理対象から外す</td></tr>
+        </table>
+    </section>
+
+    <!-- 4. 差分 -->
+    <section id="diff">
+        <h2 class="section-title">4. 差分・状態確認 (Diff/Status)</h2>
+        <table>
+            <tr><th>コマンド</th><th>解説</th></tr>
+            <tr><td><code>git status</code></td><td>現在のステージング・変更状態を表示</td></tr>
+            <tr><td><code>git status -sb</code></td><td>ブランチ情報を含め、短い形式で表示</td></tr>
+            <tr><td><code>git diff</code></td><td><span class="highlight">【差分】</span>ワークツリーとステージングの差</td></tr>
+            <tr><td><code>git diff --cached</code></td><td><span class="highlight">【差分】</span>ステージングと最新コミットの差(commit直前確認)</td></tr>
+            <tr><td><code>git diff HEAD</code></td><td>ワークツリーと最新コミットの差</td></tr>
+            <tr><td><code>git diff [commit1] [commit2]</code></td><td>コミットID間の差分を比較</td></tr>
+            <tr><td><code>git diff [branch1]..[branch2]</code></td><td>ブランチ間の差分を比較</td></tr>
+            <tr><td><code>git diff --name-only</code></td><td>変更があったファイル名の一覧だけ表示</td></tr>
+            <tr><td><code>git diff --word-diff</code></td><td>行単位ではなく、単語単位で差分を表示</td></tr>
+            <tr><td><code>git diff --stat</code></td><td>ファイルごとの変更行数の統計を表示</td></tr>
+        </table>
+    </section>
+
+    <!-- 5. ログ -->
+    <section id="log">
+        <h2 class="section-title">5. 履歴表示 (Log/Show)</h2>
+        <table>
+            <tr><th>コマンド</th><th>解説</th></tr>
+            <tr><td><code>git log</code></td><td>詳細なコミット履歴を表示</td></tr>
+            <tr><td><code>git log --oneline</code></td><td>履歴を1行ずつ簡潔に表示</td></tr>
+            <tr><td><code>git log -p</code></td><td>コミット履歴と一緒に実際の変更内容（差分）も表示</td></tr>
+            <tr><td><code>git log --graph --all --oneline</code></td><td>ブランチの分岐をアスキーアートで表示</td></tr>
+            <tr><td><code>git log -n 5</code></td><td>最新の5件だけ表示</td></tr>
+            <tr><td><code>git log --author="Name"</code></td><td>特定の作者のコミットだけ抽出</td></tr>
+            <tr><td><code>git log --grep="Fix"</code></td><td>コミットメッセージの内容で検索</td></tr>
+            <tr><td><code>git log --since="2 weeks ago"</code></td><td>最近2週間のコミットを表示</td></tr>
+            <tr><td><code>git log [file]</code></td><td>特定のファイルに関する変更履歴のみ表示</td></tr>
+            <tr><td><code>git log -S "code"</code></td><td>特定のコードが含まれるようになったコミットを検索</td></tr>
+            <tr><td><code>git show [commit_id]</code></td><td>特定のコミットの詳細内容を表示</td></tr>
+            <tr><td><code>git shortlog -sn</code></td><td>各貢献者のコミット数をランキング表示</td></tr>
+        </table>
+    </section>
+
+    <!-- 6. ブランチ -->
+    <section id="branch">
+        <h2 class="section-title">6. ブランチ・切り替え</h2>
+        <table>
+            <tr><th>コマンド</th><th>解説</th></tr>
+            <tr><td><code>git branch</code></td><td>ローカルブランチ一覧を表示</td></tr>
+            <tr><td><code>git branch -a</code></td><td>リモートを含む全ブランチを表示</td></tr>
+            <tr><td><code>git branch [name]</code></td><td>新しいブランチを作成</td></tr>
+            <tr><td><code>git switch [name]</code></td><td>ブランチを切り替える</td></tr>
+            <tr><td><code>git switch -c [name]</code></td><td>作成と切り替えを同時に行う</td></tr>
+            <tr><td><code>git branch -d [name]</code></td><td>マージ済みのブランチを安全に削除</td></tr>
+            <tr><td><code>git branch -D [name]</code></td><td>マージに関係なく強制削除</td></tr>
+            <tr><td><code>git branch -m [new_name]</code></td><td>現在のブランチの名前を変更</td></tr>
+            <tr><td><code>git branch --merged</code></td><td>マージが完了しているブランチを表示</td></tr>
+            <tr><td><code>git branch --no-merged</code></td><td>まだマージされていないブランチを表示</td></tr>
+            <tr><td><code>git checkout [commit_id]</code></td><td>一時的に過去のコミット状態に移動</td></tr>
+            <tr><td><code>git switch -</code></td><td>1つ前にいたブランチに素早く戻る</td></tr>
+        </table>
+    </section>
+
+    <!-- 7. リモート -->
+    <section id="remote">
+        <h2 class="section-title">7. リモート操作</h2>
+        <table>
+            <tr><th>コマンド</th><th>解説</th></tr>
+            <tr><td><code>git remote -v</code></td><td>リモートリポジトリのURLを確認</td></tr>
+            <tr><td><code>git remote add origin [url]</code></td><td>リモートリポジトリを登録</td></tr>
+            <tr><td><code>git fetch origin</code></td><td>リモートの最新情報を取得（合流はしない）</td></tr>
+            <tr><td><code>git pull origin [branch]</code></td><td>リモートから取得してマージ</td></tr>
+            <tr><td><code>git push origin [branch]</code></td><td>ローカルの変更を送信</td></tr>
+            <tr><td><code>git push -u origin [branch]</code></td><td>次回から<code>git push</code>だけで済むよう上流設定</td></tr>
+            <tr><td><code>git push origin --delete [branch]</code></td><td>リモート側のブランチを削除</td></tr>
+            <tr><td><code>git remote prune origin</code></td><td>リモートで消されたブランチの参照を掃除</td></tr>
+            <tr><td><code>git remote set-url origin [url]</code></td><td>リモートの接続先URLを変更</td></tr>
+            <tr><td><code>git fetch --all --prune</code></td><td>全リモートの最新情報を取得し、不要な枝を掃除</td></tr>
+        </table>
+    </section>
+
+    <!-- 8. 取消 -->
+    <section id="undo">
+        <h2 class="section-title">8. 取消・復元 (Reset/Restore)</h2>
+        <table>
+            <tr><th>コマンド</th><th>解説</th></tr>
+            <tr><td><code>git restore [file]</code></td><td>ワークツリーの変更を破棄して元に戻す</td></tr>
+            <tr><td><code>git restore --staged [file]</code></td><td>addしたファイルを取り消す（ステージ解除）</td></tr>
+            <tr><td><code>git reset --soft HEAD^</code></td><td>直前のコミットのみ取消（変更はステージに残る）</td></tr>
+            <tr><td><code>git reset --mixed HEAD^</code></td><td>直前のコミットとaddを取消（変更は残る）</td></tr>
+            <tr><td><code>git reset --hard HEAD^</code></td><td>直前のコミットと変更をすべて完全に破棄</td></tr>
+            <tr><td><code>git reset --hard [commit_id]</code></td><td>特定の過去コミットまで全てを強制的に戻す</td></tr>
+            <tr><td><code>git revert [commit_id]</code></td><td>過去のコミットを打ち消す「逆コミット」を作成</td></tr>
+            <tr><td><code>git checkout HEAD [file]</code></td><td>特定のファイルを最新コミットの状態に戻す</td></tr>
+            <tr><td><code>git reflog</code></td><td>reset等で消したコミットを含む全操作履歴を表示</td></tr>
+            <tr><td><code>git reset --hard HEAD@{1}</code></td><td>reflogを使い、間違えて行ったresetを取り消す</td></tr>
+            <tr><td><code>git cherry-pick [commit_id]</code></td><td>他のブランチから特定のコミットだけをコピーして持ってくる</td></tr>
+            <tr><td><code>git cherry-pick --abort</code></td><td>チェリーピックで競合が起きたので中止する</td></tr>
+        </table>
+    </section>
+
+    <!-- 9. 退避 -->
+    <section id="stash">
+        <h2 class="section-title">9. 一時退避・タグ・掃除</h2>
+        <table>
+            <tr><th>コマンド</th><th>解説</th></tr>
+            <tr><td><code>git stash</code></td><td>作業途中の変更を一時的に隠す</td></tr>
+            <tr><td><code>git stash list</code></td><td>退避させた作業一覧を表示</td></tr>
+            <tr><td><code>git stash pop</code></td><td>最後に隠した作業を復元してリストから消す</td></tr>
+            <tr><td><code>git stash apply</code></td><td>復元するがリストには残す</td></tr>
+            <tr><td><code>git stash drop</code></td><td>特定の退避データを削除</td></tr>
+            <tr><td><code>git clean -df</code></td><td>Git管理外の不要なファイルやフォルダを削除</td></tr>
+            <tr><td><code>git tag [tag_name]</code></td><td>現在のコミットに軽量タグを付ける</td></tr>
+            <tr><td><code>git tag -a [v1.0] -m "msg"</code></td><td>注釈付きタグ（署名等を含む）を付ける</td></tr>
+        </table>
+    </section>
+
+    <!-- 10. 高度 -->
+    <section id="expert">
+        <h2 class="section-title">10. 高度な操作・メンテナンス</h2>
+        <table>
+            <tr><th>コマンド</th><th>解説</th></tr>
+            <tr><td><code>git rebase [branch]</code></td><td>ブランチの基点を移動して履歴を一直線にする</td></tr>
+            <tr><td><code>git rebase -i HEAD~3</code></td><td>過去3つのコミットをまとめたり修正したりする</td></tr>
+            <tr><td><code>git merge --no-ff [branch]</code></td><td>必ずマージコミットを作って合流する</td></tr>
+            <tr><td><code>git blame [file]</code></td><td>ファイルの各行を「誰がいつ」書いたか表示</td></tr>
+            <tr><td><code>git grep "keyword"</code></td><td>リポジトリ内のファイルを高速検索</td></tr>
+            <tr><td><code>git bisect start</code></td><td>バグが混入したコミットを二分探索で特定する</td></tr>
+            <tr><td><code>git archive --format=zip HEAD</code></td><td>現在のファイルをzip形式で書き出す</td></tr>
+            <tr><td><code>git gc</code></td><td>不要なデータを最適化・圧縮（ガベージコレクション）</td></tr>
+            <tr><td><code>git fsck</code></td><td>データベースの整合性をチェック</td></tr>
+        </table>
+    </section>
+
+    <footer style="margin-top: 100px; padding: 40px 0; border-top: 1px solid #ddd; text-align: center; color: #888;">
+        <p>Git Command Encyclopedia - Created for Developers</p>
+    </footer>
+</main>
+
+<script>
+    // スムーズスクロール
+    document.querySelectorAll('aside a').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MySQL & mysqldump Encyclopedia 100</title>
+    <style>
+        :root {
+            --mysql-blue: #00758f;
+            --mysql-orange: #f29111;
+            --bg-light: #fdfdfd;
+            --sidebar-bg: #2b3e50;
+            --text-dark: #333;
+            --code-bg: #2d2d2d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Meiryo, sans-serif;
+            margin: 0;
+            display: flex;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        /* サイドバー */
+        aside {
+            width: 280px;
+            background: var(--sidebar-bg);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            overflow-y: auto;
+            border-right: 4px solid var(--mysql-orange);
+        }
+
+        aside h2 {
+            padding: 20px;
+            font-size: 1.2rem;
+            color: var(--mysql-orange);
+            text-align: center;
+            border-bottom: 1px solid #444;
+        }
+
+        aside ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        aside ul li a {
+            display: block;
+            padding: 12px 20px;
+            color: #ecf0f1;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: 0.3s;
+        }
+
+        aside ul li a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            padding-left: 30px;
+        }
+
+        /* メイン */
+        main {
+            margin-left: 280px;
+            padding: 40px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        header {
+            border-bottom: 4px solid var(--mysql-blue);
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+        }
+
+        h1 { font-size: 2.2rem; color: var(--mysql-blue); margin: 0; }
+        .subtitle { margin-top: 10px; color: #666; }
+
+        h2.section-title {
+            margin-top: 50px;
+            padding: 12px;
+            background: white;
+            border-left: 8px solid var(--mysql-blue);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin-top: 15px;
+        }
+
+        th {
+            background: #f8f9fa;
+            padding: 15px;
+            text-align: left;
+            border-bottom: 2px solid var(--mysql-blue);
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+
+        code {
+            background: var(--code-bg);
+            color: #66d9ef;
+            padding: 3px 7px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            display: inline-block;
+        }
+
+        .imp { color: var(--mysql-orange); font-weight: bold; }
+
+        @media (max-width: 800px) {
+            aside { width: 100%; height: auto; position: static; }
+            main { margin-left: 0; padding: 20px; }
+            body { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<aside>
+    <h2>MySQL 100 Reference</h2>
+    <ul>
+        <li><a href="#client">1. クライアント・ツール (10)</a></li>
+        <li><a href="#dump">2. バックアップ/復元 (10)</a></li>
+        <li><a href="#ddl">3. データベース・テーブル定義 (12)</a></li>
+        <li><a href="#dml">4. データ操作 (SELECT/INSERT) (15)</a></li>
+        <li><a href="#show">5. 状態・情報の確認 (12)</a></li>
+        <li><a href="#user">6. ユーザー・権限管理 (10)</a></li>
+        <li><a href="#perf">7. パフォーマンス・分析 (8)</a></li>
+        <li><a href="#trans">8. トランザクション・ロック (8)</a></li>
+        <li><a href="#stored">9. ストアド・ビュー (8)</a></li>
+        <li><a href="#admin">10. 管理・メンテナンス (7)</a></li>
+    </ul>
+</aside>
+
+<main>
+    <header>
+        <h1>MySQLコマンド 100選</h1>
+        <p class="subtitle">MySQLサーバー管理、SQL操作、mysqldump等によるバックアップを網羅した完全ガイド。</p>
+    </header>
+
+    <!-- 1. クライアント -->
+    <section id="client">
+        <h2 class="section-title">1. クライアント・ツール起動</h2>
+        <table>
+            <tr><th width="40%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>mysql -u [user] -p</code></td><td>MySQLにログイン（パスワード対話入力）</td></tr>
+            <tr><td><code>mysql -h [host] -u [user] -p</code></td><td>リモートホストのMySQLに接続</td></tr>
+            <tr><td><code>mysql [db_name] < [script.sql]</code></td><td>SQLファイルを一括実行</td></tr>
+            <tr><td><code>mysql -e "SELECT ..."</code></td><td>ログインせずにSQLを実行して終了</td></tr>
+            <tr><td><code>mysql --vertical</code></td><td>結果を縦並び（\G形式）で表示</td></tr>
+            <tr><td><code>mysqladmin ping</code></td><td>サーバーの稼働確認</td></tr>
+            <tr><td><code>mysqladmin status</code></td><td>稼働時間やクエリ数の要約を表示</td></tr>
+            <tr><td><code>mysqladmin variables</code></td><td>システム変数を表示</td></tr>
+            <tr><td><code>mysqladmin shutdown</code></td><td>MySQLサーバーを停止</td></tr>
+            <tr><td><code>mysqlshow -u [user] -p</code></td><td>DB・テーブル一覧を素早く確認</td></tr>
+        </table>
+    </section>
+
+    <!-- 2. mysqldump -->
+    <section id="dump">
+        <h2 class="section-title">2. バックアップと復元 (mysqldump)</h2>
+        <table>
+            <tr><th width="40%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>mysqldump -u [user] -p [db] > [file.sql]</code></td><td><span class="imp">【基本】</span>特定のDBをエクスポート</td></tr>
+            <tr><td><code>mysqldump --all-databases > [all.sql]</code></td><td>全データベースをエクスポート</td></tr>
+            <tr><td><code>mysqldump [db] [table] > [table.sql]</code></td><td>特定のテーブルのみを抽出</td></tr>
+            <tr><td><code>mysqldump --no-data [db] > [schema.sql]</code></td><td>データを含まず、構造（スキーマ）のみ出力</td></tr>
+            <tr><td><code>mysqldump --no-create-info [db] > [data.sql]</code></td><td>CREATE文を含まず、データ（INSERT）のみ出力</td></tr>
+            <tr><td><code>mysqldump --single-transaction [db]</code></td><td>InnoDBで整合性を保ちつつロックなしで実行</td></tr>
+            <tr><td><code>mysqldump --quick [db]</code></td><td>メモリ消費を抑えて巨大DBをダンプ</td></tr>
+            <tr><td><code>mysqldump --routines --triggers [db]</code></td><td>関数やトリガーを含めて出力</td></tr>
+            <tr><td><code>mysqldump --where="id > 100" [db] [table]</code></td><td>条件に一致するデータのみ抽出</td></tr>
+            <tr><td><code>mysqlimport -u [user] -p [db] [file.csv]</code></td><td>CSVファイルをDBにインポート</td></tr>
+        </table>
+    </section>
+
+    <!-- 3. DDL -->
+    <section id="ddl">
+        <h2 class="section-title">3. データベース・テーブル定義 (DDL)</h2>
+        <table>
+            <tr><th width="40%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>CREATE DATABASE [name];</code></td><td>新しいDBを作成</td></tr>
+            <tr><td><code>DROP DATABASE [name];</code></td><td>DBを削除（注意！）</td></tr>
+            <tr><td><code>USE [name];</code></td><td>操作対象のDBを選択</td></tr>
+            <tr><td><code>CREATE TABLE [t] (id INT, ...);</code></td><td>テーブルを新規作成</td></tr>
+            <tr><td><code>ALTER TABLE [t] ADD COLUMN [c] [type];</code></td><td>カラムを追加</td></tr>
+            <tr><td><code>ALTER TABLE [t] MODIFY [c] [new_type];</code></td><td>カラムの型を変更</td></tr>
+            <tr><td><code>ALTER TABLE [t] DROP COLUMN [c];</code></td><td>カラムを削除</td></tr>
+            <tr><td><code>RENAME TABLE [old] TO [new];</code></td><td>テーブル名を変更</td></tr>
+            <tr><td><code>TRUNCATE TABLE [t];</code></td><td>データを全削除（IDリセット、高速）</td></tr>
+            <tr><td><code>CREATE INDEX [idx] ON [t]([col]);</code></td><td>インデックスを作成</td></tr>
+            <tr><td><code>DROP INDEX [idx] ON [t];</code></td><td>インデックスを削除</td></tr>
+            <tr><td><code>CREATE TABLE [t2] LIKE [t1];</code></td><td>構造だけをコピーして作成</td></tr>
+        </table>
+    </section>
+
+    <!-- 4. DML -->
+    <section id="dml">
+        <h2 class="section-title">4. データ操作 (DML)</h2>
+        <table>
+            <tr><th width="40%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>SELECT * FROM [t];</code></td><td>全レコードを取得</td></tr>
+            <tr><td><code>SELECT DISTINCT [col] FROM [t];</code></td><td>重複を除外して取得</td></tr>
+            <tr><td><code>INSERT INTO [t] VALUES (...);</code></td><td>データを挿入</td></tr>
+            <tr><td><code>INSERT IGNORE INTO ...</code></td><td>エラー（重複等）を無視して挿入</td></tr>
+            <tr><td><code>UPDATE [t] SET [c]=[v] WHERE ...;</code></td><td>データを更新</td></tr>
+            <tr><td><code>DELETE FROM [t] WHERE ...;</code></td><td>条件に合うデータを削除</td></tr>
+            <tr><td><code>REPLACE INTO [t] ...</code></td><td>既存なら削除して再挿入（MySQL拡張）</td></tr>
+            <tr><td><code>ON DUPLICATE KEY UPDATE</code></td><td>重複があればUPDATE、なければINSERT</td></tr>
+            <tr><td><code>SELECT ... LIMIT [num];</code></td><td>取得件数を制限</td></tr>
+            <tr><td><code>SELECT ... ORDER BY [col] DESC;</code></td><td>降順でソート</td></tr>
+            <tr><td><code>SELECT ... GROUP BY [col];</code></td><td>グループ化</td></tr>
+            <tr><td><code>SELECT COUNT(*), AVG([col]) ...</code></td><td>件数、平均などの集計関数</td></tr>
+            <tr><td><code>SELECT ... JOIN [t2] ON ...</code></td><td>テーブル結合（INNER JOIN）</td></tr>
+            <tr><td><code>SELECT ... LEFT JOIN [t2] ON ...</code></td><td>左外部結合</td></tr>
+            <tr><td><code>SELECT ... WHERE [col] LIKE '%val%';</code></td><td>あいまい検索</td></tr>
+        </table>
+    </section>
+
+    <!-- 5. SHOW -->
+    <section id="show">
+        <h2 class="section-title">5. 状態確認 (SHOW/DESCRIBE)</h2>
+        <table>
+            <tr><th width="40%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>SHOW DATABASES;</code></td><td>DB一覧を表示</td></tr>
+            <tr><td><code>SHOW TABLES;</code></td><td>テーブル一覧を表示</td></tr>
+            <tr><td><code>DESC [table_name];</code></td><td>テーブルの構造（型、キー等）を表示</td></tr>
+            <tr><td><code>SHOW CREATE TABLE [t];</code></td><td>テーブル作成時のSQL文を表示</td></tr>
+            <tr><td><code>SHOW INDEX FROM [t];</code></td><td>インデックスの詳細を表示</td></tr>
+            <tr><td><code>SHOW PROCESSLIST;</code></td><td>現在実行中のクエリ一覧を表示</td></tr>
+            <tr><td><code>SHOW VARIABLES LIKE '%max%';</code></td><td>システム設定（変数）を検索</td></tr>
+            <tr><td><code>SHOW STATUS;</code></td><td>サーバーの稼働統計を表示</td></tr>
+            <tr><td><code>SHOW TABLE STATUS;</code></td><td>サイズや行数などテーブル詳細統計</td></tr>
+            <tr><td><code>SHOW GRANTS FOR [user];</code></td><td>ユーザーの権限を確認</td></tr>
+            <tr><td><code>SHOW ENGINES;</code></td><td>利用可能なストレージエンジンの一覧</td></tr>
+            <tr><td><code>SHOW MASTER STATUS;</code></td><td>バイナリログの現在位置（レプリ用）</td></tr>
+        </table>
+    </section>
+
+    <!-- 6. ユーザー -->
+    <section id="user">
+        <h2 class="section-title">6. ユーザー・権限管理</h2>
+        <table>
+            <tr><th width="40%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>CREATE USER '[u]'@'%' IDENTIFIED BY '[p]';</code></td><td>ユーザーを新規作成</td></tr>
+            <tr><td><code>GRANT ALL ON [db].* TO '[u]'@'%';</code></td><td>特定DBへの全権限を付与</td></tr>
+            <tr><td><code>GRANT SELECT, INSERT ON ...</code></td><td>特定の操作権限のみ付与</td></tr>
+            <tr><td><code>REVOKE ALL ON ...</code></td><td>権限を剥奪</td></tr>
+            <tr><td><code>SET PASSWORD FOR '[u]'@'%' = '[new]';</code></td><td>パスワードを変更</td></tr>
+            <tr><td><code>DROP USER '[u]'@'%';</code></td><td>ユーザーを削除</td></tr>
+            <tr><td><code>FLUSH PRIVILEGES;</code></td><td>権限設定を即座に反映</td></tr>
+            <tr><td><code>ALTER USER '[u]'@'%' ACCOUNT LOCK;</code></td><td>ユーザーを一時ロック</td></tr>
+            <tr><td><code>SELECT User, Host FROM mysql.user;</code></td><td>全ユーザーリストを確認</td></tr>
+            <tr><td><code>CREATE USER ... WITH MAX_QUERIES_PER_HOUR 100</code></td><td>1時間あたりのクエリ数を制限</td></tr>
+        </table>
+    </section>
+
+    <!-- 7. パフォーマンス -->
+    <section id="perf">
+        <h2 class="section-title">7. パフォーマンス・分析</h2>
+        <table>
+            <tr><th width="40%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>EXPLAIN SELECT ...;</code></td><td>実行計画を表示（インデックス使用の確認）</td></tr>
+            <tr><td><code>ANALYZE TABLE [t];</code></td><td>キー分布の分析（統計の更新）</td></tr>
+            <tr><td><code>OPTIMIZE TABLE [t];</code></td><td>断片化したデータの整理（領域の解放）</td></tr>
+            <tr><td><code>CHECK TABLE [t];</code></td><td>テーブルの破損チェック</td></tr>
+            <tr><td><code>REPAIR TABLE [t];</code></td><td>壊れたテーブルを修復（MyISAM等）</td></tr>
+            <tr><td><code>SET profiling = 1;</code></td><td>クエリの詳細な実行時間測定を開始</td></tr>
+            <tr><td><code>SHOW PROFILES;</code></td><td>直近のクエリ実行時間一覧</td></tr>
+            <tr><td><code>SHOW PROFILE FOR QUERY [id];</code></td><td>特定クエリのCPU/メモリ使用内訳</td></tr>
+        </table>
+    </section>
+
+    <!-- 8. トランザクション -->
+    <section id="trans">
+        <h2 class="section-title">8. トランザクション・ロック</h2>
+        <table>
+            <tr><th width="40%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>START TRANSACTION;</code></td><td>トランザクションを開始</td></tr>
+            <tr><td><code>COMMIT;</code></td><td>変更を確定</td></tr>
+            <tr><td><code>ROLLBACK;</code></td><td>変更を取り消して戻る</td></tr>
+            <tr><td><code>SET AUTOCOMMIT = 0;</code></td><td>自動コミットを無効化</td></tr>
+            <tr><td><code>LOCK TABLES [t] READ;</code></td><td>読み取り専用ロック</td></tr>
+            <tr><td><code>LOCK TABLES [t] WRITE;</code></td><td>書き込みロック</td></tr>
+            <tr><td><code>UNLOCK TABLES;</code></td><td>ロックをすべて解除</td></tr>
+            <tr><td><code>SELECT ... FOR UPDATE;</code></td><td>行レベルの排他ロック（SELECT時）</td></tr>
+        </table>
+    </section>
+
+    <!-- 9. ストアド -->
+    <section id="stored">
+        <h2 class="section-title">9. ストアド・ビュー・関数</h2>
+        <table>
+            <tr><th width="40%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>CREATE VIEW [v] AS SELECT ...</code></td><td>ビューを作成</td></tr>
+            <tr><td><code>CREATE PROCEDURE [p]() BEGIN ... END</code></td><td>ストアドプロシージャを作成</td></tr>
+            <tr><td><code>CALL [p]();</code></td><td>プロシージャを実行</td></tr>
+            <tr><td><code>CREATE TRIGGER ...</code></td><td>トリガー（自動実行処理）を作成</td></tr>
+            <tr><td><code>CREATE FUNCTION [f]() RETURNS ...</code></td><td>自作関数を作成</td></tr>
+            <tr><td><code>SHOW PROCEDURE STATUS;</code></td><td>定義済みプロシージャ一覧</td></tr>
+            <tr><td><code>DROP VIEW [v];</code></td><td>ビューを削除</td></tr>
+            <tr><td><code>DROP TRIGGER [name];</code></td><td>トリガーを削除</td></tr>
+        </table>
+    </section>
+
+    <!-- 10. メンテナンス -->
+    <section id="admin">
+        <h2 class="section-title">10. 管理・メンテナンス</h2>
+        <table>
+            <tr><th width="40%">コマンド</th><th>解説</th></tr>
+            <tr><td><code>SET GLOBAL max_connections = 500;</code></td><td>最大接続数を実行中に変更</td></tr>
+            <tr><td><code>KILL [thread_id];</code></td><td>暴走しているクエリを強制終了</td></tr>
+            <tr><td><code>RESET MASTER;</code></td><td>バイナリログを全削除（初期化）</td></tr>
+            <tr><td><code>PURGE BINARY LOGS TO 'mysql-bin.010';</code></td><td>指定ログより古いものを削除</td></tr>
+            <tr><td><code>CHANGE MASTER TO ...</code></td><td>レプリケーションの設定</td></tr>
+            <tr><td><code>START SLAVE;</code></td><td>レプリケーションを開始</td></tr>
+            <tr><td><code>STOP SLAVE;</code></td><td>レプリケーションを停止</td></tr>
+        </table>
+    </section>
+
+    <footer style="margin-top: 100px; padding: 40px 0; border-top: 1px solid #ddd; text-align: center; color: #888;">
+        MySQL & mysqldump Ultimate Reference 100.
+    </footer>
+</main>
+
+<script>
+    document.querySelectorAll('aside a').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
