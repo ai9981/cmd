@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python環境構築・コマンドリファレンス</title>
+    <style>
+        :root {
+            --primary-color: #3776ab;
+            --secondary-color: #ffd343;
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --code-bg: #2d2d2d;
+            --code-text: #f8f8f2;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--secondary-color);
+            padding-bottom: 10px;
+            text-align: center;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-top: 30px;
+            border-left: 5px solid var(--primary-color);
+            padding-left: 15px;
+        }
+
+        .command-block {
+            background-color: var(--code-bg);
+            color: var(--code-text);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            position: relative;
+            margin: 10px 0;
+        }
+
+        code {
+            font-family: 'Consolas', 'Monaco', monospace;
+        }
+
+        .description {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .note {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            margin: 10px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .os-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-right: 5px;
+            font-weight: bold;
+        }
+        .win { background: #00a4ef; color: white; }
+        .mac { background: #999; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Python コマンドリファレンス</h1>
+
+    <h2>1. 基本確認</h2>
+    <p>インストールされているPythonのバージョンを確認します。</p>
+    <div class="command-block">
+        <code>python --version</code>
+    </div>
+
+    <h2>2. 仮想環境 (venv) の操作</h2>
+    <p>プロジェクトごとに独立した環境を作るための標準機能です。</p>
+
+    <div class="description">仮想環境の作成</div>
+    <div class="command-block">
+        <code>python -m venv .venv</code>
+    </div>
+
+    <div class="description">仮想環境の有効化 (Activate)</div>
+    <p><span class="os-tag win">Windows</span></p>
+    <div class="command-block">
+        <code>.venv\Scripts\activate</code>
+    </div>
+    <p><span class="os-tag mac">macOS / Linux</span></p>
+    <div class="command-block">
+        <code>source .venv/bin/activate</code>
+    </div>
+
+    <div class="description">環境の無効化 (Deactivate)</div>
+    <div class="command-block">
+        <code>deactivate</code>
+    </div>
+
+    <h2>3. パッケージ管理 (pip)</h2>
+    <p>ライブラリのインストールや管理を行います。</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>操作</th>
+                <th>コマンド</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>ライブラリのインストール</td>
+                <td><code>pip install パッケージ名</code></td>
+            </tr>
+            <tr>
+                <td>特定のバージョンを指定</td>
+                <td><code>pip install パッケージ名==1.2.3</code></td>
+            </tr>
+            <tr>
+                <td>インストール済み一覧</td>
+                <td><code>pip list</code></td>
+            </tr>
+            <tr>
+                <td>ライブラリの削除</td>
+                <td><code>pip uninstall パッケージ名</code></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>4. requirements.txt の活用</h2>
+    <p>チーム開発やデプロイ時に環境を再現するために使用します。</p>
+
+    <div class="description">現在の環境構成を書き出す</div>
+    <div class="command-block">
+        <code>pip freeze > requirements.txt</code>
+    </div>
+
+    <div class="description">ファイルから一括インストール</div>
+    <div class="command-block">
+        <code>pip install -r requirements.txt</code>
+    </div>
+
+    <h2>5. スクリプトの実行</h2>
+    <div class="command-block">
+        <code>python main.py</code>
+    </div>
+
+    <div class="note">
+        <strong>Tips:</strong> Windowsで複数のPythonがインストールされている場合、<code>python</code>の代わりに<code>py</code>コマンド（Pythonランチャー）を使用すると便利な場合があります。<br>
+        例: <code>py -3.10 -m venv .venv</code>
+    </div>
+</div>
+
+</body>
+</html>
